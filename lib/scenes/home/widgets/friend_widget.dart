@@ -20,7 +20,7 @@ class FriendWidget extends StatelessWidget {
           .then((value) => context.read<FriendsCubit>().loadFriends()),
       child: Container(
         padding: const EdgeInsets.symmetric(
-          vertical: 8,
+          vertical: 10,
           horizontal: 16,
         ),
         child: Row(
