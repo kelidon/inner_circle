@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../blocs/friends/friends_cubit.dart';
 import '../../../common/app_routes.dart';
 import '../../../data/models/friend_model.dart';
 import '../../update_friend/widgets/avatar_widget.dart';
@@ -13,7 +15,9 @@ class FriendWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.of(context).pushNamed(AppRoutes.updateFriend, arguments: friend),
+      onTap: () => Navigator.of(context)
+          .pushNamed(AppRoutes.updateFriend, arguments: friend)
+          .then((value) => context.read<FriendsCubit>().loadFriends()),
       child: Container(
         padding: const EdgeInsets.symmetric(
           vertical: 8,
@@ -22,14 +26,17 @@ class FriendWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const AvatarWidget(),
+            AvatarWidget(date: friend.birthday.day),
             const SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(friend.name),
-                const SizedBox(height: 8),
-                Text(DateFormat(DateFormat.MONTH_DAY).format(friend.birthday))
+                Text(friend.name, style: const TextStyle(fontSize: 22)),
+                //const SizedBox(height: 4),
+                Text(
+                  DateFormat(DateFormat.YEAR).format(friend.birthday),
+                  style: TextStyle(color: Colors.white.withOpacity(0.4)),
+                )
               ],
             ),
           ],

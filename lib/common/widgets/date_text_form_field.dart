@@ -4,6 +4,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'date_text_formatter.dart';
+
 class DateTextFormField extends StatefulWidget {
   DateTextFormField({
     super.key,
@@ -233,6 +235,7 @@ class _DateTextFormFieldState extends State<DateTextFormField> {
             .merge(datePickerTheme.inputDecorationTheme)
             .copyWith(border: effectiveInputBorder),
       ),
+      inputFormatters: [DateTextFormatter()],
       validator: _validateDate,
       keyboardType: widget.keyboardType ?? TextInputType.datetime,
       onChanged: _handleChanged,

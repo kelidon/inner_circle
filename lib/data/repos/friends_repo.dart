@@ -35,10 +35,6 @@ class FriendsRepo {
     _friends
         .addAll(data.map((e) => Friend.fromJson(jsonDecode(e) as Map<String, dynamic>)).toList());
 
-    print("=====");
-    print(_friends);
-    print("=====");
-
     return _friends;
   }
 
@@ -54,10 +50,7 @@ class FriendsRepo {
   Future<void> deleteFriend(Friend dltFriend) async {
     var prefs = await SharedPreferences.getInstance();
 
-    print(dltFriend);
-    print(_friends);
     _friends.removeWhere((e) => e.id == dltFriend.id);
-    print(_friends);
 
     await prefs.setStringList(_friendsKey, _friends.map((e) => jsonEncode(e.toJson())).toList());
   }

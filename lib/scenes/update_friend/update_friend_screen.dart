@@ -39,17 +39,18 @@ class _UpdateFriendScreenState extends State<UpdateFriendScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(),
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-          child: SingleChildScrollView(
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     AvatarWidget(
                       size: 126,
+                      date: birthDate?.day,
                     ),
                   ],
                 ),
@@ -102,12 +103,14 @@ class _UpdateFriendScreenState extends State<UpdateFriendScreen> {
                                         child: LinearProgressIndicator(
                                           color: Colors.black,
                                           backgroundColor: Colors.white.withOpacity(0.6),
-                                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                                          borderRadius: const BorderRadius.all(Radius.circular(8)),
                                         )))
-                                : Text("remove"),
+                                : const Text("remove"),
                           ),
                         FilledButton(
-                          onPressed: isProcessing
+                          onPressed: isProcessing ||
+                                  nameController.text.isEmpty ||
+                                  birthDate == null
                               ? null
                               : () {
                                   if (widget.friend != null) {
@@ -127,7 +130,7 @@ class _UpdateFriendScreenState extends State<UpdateFriendScreen> {
                                       child: LinearProgressIndicator(
                                         color: Colors.black,
                                         backgroundColor: Colors.white.withOpacity(0.6),
-                                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                                        borderRadius: const BorderRadius.all(Radius.circular(8)),
                                       )))
                               : Text(widget.friend == null ? "keep" : "save"),
                         ),

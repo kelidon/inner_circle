@@ -7,7 +7,7 @@ class DataState extends FriendsState {
   final List<Friend> friends;
 
   DataState(this.friends) {
-    friends.sort((a, b) => b.birthday.compareTo(a.birthday));
+    friends.sort((a, b) => a.birthday.month.compareTo(b.birthday.month));
   }
 }
 

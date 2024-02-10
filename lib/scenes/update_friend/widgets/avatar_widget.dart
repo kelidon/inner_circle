@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AvatarWidget extends StatelessWidget {
-  const AvatarWidget({super.key, this.size = 42});
+  const AvatarWidget({super.key, this.size = 42, this.date});
 
   final double size;
+  final int? date;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +31,13 @@ class AvatarWidget extends StatelessWidget {
           ),
         ],
       ),
+      child: date == null
+          ? null
+          : Center(
+              child: Text(
+              date.toString(),
+              style: TextStyle(fontSize: size / 2.2),
+            )),
     );
   }
 }

@@ -20,6 +20,7 @@ dependencies:
   neon: ^0.1.0
   flutter_native_splash: ^2.3.6
   flutter_launcher_icons: ^0.13.1
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -32,8 +33,8 @@ flutter:
 
   uses-material-design: true
 
-assets:
- - assets/images
+  assets:
+   - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -63,7 +64,6 @@ assets:
 
 flutter_native_splash:
   color: "#000000"
-#  background_image: "assets/images/spl.jpg"
   image: assets/images/splash.png
 
   android_12:
@@ -71,9 +71,10 @@ flutter_native_splash:
     image: assets/images/splash.png
 
 flutter_launcher_icons:
-  android: "launcher_icon"
+  android: false
+  min_sdk_android: 21
   ios: true
   image_path: "assets/images/splash.png"
-  min_sdk_android: 21
+  adaptive_icon_background: "#000000"
 
 
