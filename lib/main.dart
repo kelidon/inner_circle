@@ -7,9 +7,9 @@ import 'package:inner_circle/common/app_colors.dart';
 import 'package:inner_circle/common/app_routes.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
   runZonedGuarded<Future<void>>(
     () async {
+      WidgetsFlutterBinding.ensureInitialized();
       runApp(const MyApp());
     },
     (error, stackTrace) {
@@ -36,6 +36,9 @@ class MyApp extends StatelessWidget {
 
       return baseTheme.copyWith(
         textTheme: GoogleFonts.kanitTextTheme(baseTheme.textTheme),
+        pageTransitionsTheme: const PageTransitionsTheme(builders: {
+          TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        }),
       );
     }
 
