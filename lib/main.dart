@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:inner_circle/common/app_colors.dart';
@@ -5,7 +8,16 @@ import 'package:inner_circle/common/app_routes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runZonedGuarded<Future<void>>(
+    () async {
+      runApp(const MyApp());
+    },
+    (error, stackTrace) {
+      if (kDebugMode) {
+        print('Error: $error, stackTrace: $stackTrace');
+      }
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {
