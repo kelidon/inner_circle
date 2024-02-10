@@ -18,20 +18,14 @@ class UpdateFriendScreen extends StatefulWidget {
 }
 
 class _UpdateFriendScreenState extends State<UpdateFriendScreen> {
-  late final TextEditingController nameController;
+  String? name;
   DateTime? birthDate;
 
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.friend?.name);
+    name = widget.friend?.name;
     birthDate = widget.friend?.birthday;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    nameController.dispose();
   }
 
   @override
@@ -56,11 +50,17 @@ class _UpdateFriendScreenState extends State<UpdateFriendScreen> {
                 ),
                 const SizedBox(height: 40),
                 TextFormField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'name',
-                    )),
+                  initialValue: name,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'name',
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      name = value;
+                    });
+                  },
+                ),
                 const SizedBox(height: 24),
                 DateTextFormField(
                   firstDate: DateTime(1937),
@@ -108,19 +108,15 @@ class _UpdateFriendScreenState extends State<UpdateFriendScreen> {
                                 : const Text("remove"),
                           ),
                         FilledButton(
-                          onPressed: isProcessing ||
-                                  nameController.text.isEmpty ||
-                                  birthDate == null
+                          onPressed: isProcessing || name == null || birthDate == null
                               ? null
                               : () {
                                   if (widget.friend != null) {
-                                    context.read<FriendsCubit>().editFriend(widget.friend!
-                                        .copyWith(name: nameController.text, birthday: birthDate!));
+                                    context.read<FriendsCubit>().editFriend(
+                                        widget.friend!.copyWith(name: name, birthday: birthDate!));
                                   } else {
                                     context.read<FriendsCubit>().addFriend(Friend(
-                                        id: const Uuid().v4(),
-                                        name: nameController.text,
-                                        birthday: birthDate!));
+                                        id: const Uuid().v4(), name: name!, birthday: birthDate!));
                                   }
                                 },
                           child: isProcessing
