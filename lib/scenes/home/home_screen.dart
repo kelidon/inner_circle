@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_glow/flutter_glow.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:inner_circle/blocs/friends/friends_cubit.dart';
 import 'package:inner_circle/common/app_colors.dart';
 import 'package:inner_circle/common/app_routes.dart';
-import 'package:inner_circle/scenes/home/widgets/friend_widget.dart';
-import 'package:intl/intl.dart';
-import 'package:neon/neon.dart';
-
-import '../../data/models/friend_model.dart';
+import 'package:inner_circle/scenes/home/widgets/friends_calendar_view.dart';
+import 'package:inner_circle/scenes/home/widgets/friends_list_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,75 +18,83 @@ class HomeScreen extends StatefulWidget {
 const appName = 'inner circle';
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isCalendarView = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Neon(
-          text: appName,
-          color: AppColors.primary,
-          fontSize: 24,
-          font: NeonFont.Beon,
-          glowing: true,
-          glowingDuration: const Duration(seconds: 4),
-          flickeringLetters: const [0, 1],
-          blurRadius: 50,
+        title: Center(
+          child: GlowText(
+            appName,
+            style: GoogleFonts.orbitron(
+              color: AppColors.schemeSeedLight,
+              fontSize: 25,
+            ),
+            glowColor: AppColors.schemeSeedLight,
+            blurRadius: 20,
+          ),
         ),
         backgroundColor: Colors.black,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context)
-            .pushNamed(AppRoutes.updateFriend)
-            .then((value) => context.read<FriendsCubit>().loadFriends()),
-        child: const Icon(Icons.add_outlined),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: "1",
+            onPressed: () => setState(() {
+              isCalendarView = !isCalendarView;
+            }),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 333),
+              child: isCalendarView
+                  ? const Icon(
+                      Icons.list_alt_outlined,
+                      key: Key("FriendsListFab"),
+                    )
+                  : const Icon(
+                      Icons.calendar_month_outlined,
+                      key: Key("FriendsCalendarFab"),
+                    ),
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: animation,
+                //alignment: Alignment.topCenter,
+                child: child,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          FloatingActionButton(
+            heroTag: "2",
+            onPressed: () => Navigator.of(context)
+                .pushNamed(AppRoutes.updateFriend)
+                .then((value) => context.read<FriendsCubit>().loadFriends()),
+            child: const Icon(Icons.add_outlined),
+          ),
+        ],
       ),
       body: BlocBuilder<FriendsCubit, FriendsState>(
+        //buildWhen: (prev, curr)=>,
         builder: (_, state) {
           switch (state) {
             case DataState():
-              var mappedFriends = <int, List<Friend>>{};
-              for (var e in state.friends) {
-                var month = e.birthday.month;
-                if (mappedFriends[month] == null) {
-                  mappedFriends[month] = [e];
-                } else {
-                  mappedFriends[month]!.add(e);
-                }
-              }
-
-              // var currentMonth = DateTime.now().month;
-              // var sortedMonth = mapped.keys.toList();
-              // sortedMonth.sort();
-              // var monthOrder = [
-              //   ...mapped.keys.where((e) => e >= currentMonth),
-              //   ...mapped.keys.where((e) => e < currentMonth)
-              // ];
-
-              return CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: [
-                  for (var monthInfo in mappedFriends.keys) ...[
-                    SliverAppBar(
-                      title: Text(DateFormat(DateFormat.MONTH)
-                          .format(mappedFriends[monthInfo]![0].birthday)),
-                      pinned: true,
-                      backgroundColor: Color(0xFF152416),
-                      elevation: 100,
-                    ),
-                    SliverList.separated(
-                      itemCount: mappedFriends[monthInfo]!.length + 2,
-                      itemBuilder: (_, i) => i == 0 || i == mappedFriends[monthInfo]!.length + 1
-                          ? const SizedBox.shrink()
-                          : FriendWidget(
-                              friend: mappedFriends[monthInfo]![i - 1],
-                            ),
-                      separatorBuilder: (_, i) => const Divider(
-                        height: 1,
+              return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 333),
+                switchInCurve: Curves.bounceIn,
+                switchOutCurve: Curves.bounceOut,
+                child: isCalendarView
+                    ? FriendsCalendarView(
+                        state.friends,
+                        key: Key("FriendsCalendarView${state.friends.length}"),
+                      )
+                    : FriendsListView(
+                        state.friends,
+                        key: Key("FriendsListView${state.friends.length}"),
                       ),
-                    ),
-                  ]
-                ],
               );
             case LoadingState():
               return const Center(
