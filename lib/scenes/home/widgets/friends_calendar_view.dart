@@ -57,8 +57,12 @@ class EventsDataSource extends CalendarDataSource {
 
   @override
   String getRecurrenceRule(int index) {
-    return RecurrenceRule(
+    var birthday = _getEventData(index).birthday;
+    return
+      RecurrenceRule(
       frequency: Frequency.yearly,
+      byMonthDays: [birthday.day],
+      byMonths: [birthday.month],
       interval: 1,
     ).toString();
   }
