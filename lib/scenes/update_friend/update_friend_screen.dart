@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../common/app_colors.dart';
 import '../../common/widgets/date_text_form_field.dart';
+import '../../common/widgets/ic_appbar_title.dart';
 import '../../data/models/friend_model.dart';
 
 class UpdateFriendScreen extends StatefulWidget {
@@ -32,7 +33,12 @@ class _UpdateFriendScreenState extends State<UpdateFriendScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          title: const ICAppBarTitle(),
+          backgroundColor: Colors.black,
+          centerTitle: true,
+        ),
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -73,7 +79,7 @@ class _UpdateFriendScreenState extends State<UpdateFriendScreen> {
                     });
                   },
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 24),
                 BlocConsumer<FriendsCubit, FriendsState>(
                   listener: (context, state) {
                     if (state is DataState) {

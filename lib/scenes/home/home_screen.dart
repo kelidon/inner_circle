@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_glow/flutter_glow.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:inner_circle/blocs/friends/friends_cubit.dart';
-import 'package:inner_circle/common/app_colors.dart';
 import 'package:inner_circle/common/app_routes.dart';
+import 'package:inner_circle/common/widgets/ic_appbar_title.dart';
 import 'package:inner_circle/scenes/home/widgets/friends_calendar_view.dart';
 import 'package:inner_circle/scenes/home/widgets/friends_list_view.dart';
 
@@ -15,8 +13,6 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-const appName = 'inner circle';
-
 class _HomeScreenState extends State<HomeScreen> {
   bool isCalendarView = false;
 
@@ -26,18 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Center(
-          child: GlowText(
-            appName,
-            style: GoogleFonts.orbitron(
-              color: AppColors.schemeSeedLight,
-              fontSize: 25,
-            ),
-            glowColor: AppColors.schemeSeedLight,
-            blurRadius: 20,
-          ),
-        ),
+        title: const ICAppBarTitle(),
         backgroundColor: Colors.black,
+        centerTitle: true,
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,

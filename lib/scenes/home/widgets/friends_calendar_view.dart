@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_glow/flutter_glow.dart';
 import 'package:inner_circle/common/app_colors.dart';
 import 'package:rrule/rrule.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../../../common/app_routes.dart';
 import '../../../data/models/friend_model.dart';
 
 class FriendsCalendarView extends StatelessWidget {
@@ -15,12 +17,38 @@ class FriendsCalendarView extends StatelessWidget {
     print("FriendsCalendarView");
     return SfCalendar(
       view: CalendarView.month,
+      firstDayOfWeek: 1,
       dataSource: EventsDataSource(friends),
-      // by default the month appointment display mode set as Indicator, we can
-      // change the display mode as appointment using the appointment display
-      // mode property
       monthViewSettings: const MonthViewSettings(
-          appointmentDisplayMode: MonthAppointmentDisplayMode.appointment, showAgenda: true),
+          appointmentDisplayMode: MonthAppointmentDisplayMode.indicator, showAgenda: true),
+      appointmentBuilder: appointmentBuilder,
+    );
+  }
+
+  Widget appointmentBuilder(
+      BuildContext context, CalendarAppointmentDetails calendarAppointmentDetails) {
+    final Appointment appointment = calendarAppointmentDetails.appointments.first;
+    final friend = friends.firstWhere((element) => element.id == appointment.subject);
+    return InkWell(
+      onTap: () => Navigator.of(context).pushNamed(AppRoutes.updateFriend, arguments: friend),
+      child: GlowContainer(
+        glowColor: AppColors.schemeSeed.withOpacity(0.5),
+        blurRadius: 2,
+        borderRadius: BorderRadius.all(Radius.circular(1)),
+        padding: EdgeInsets.all(4),
+        color: appointment.color,
+        alignment: Alignment.centerLeft,
+        child: RichText(
+          text: TextSpan(text: friend.name, style: TextStyle(fontSize: 12), children: [
+            TextSpan(
+                text: "  ${appointment.startTime.year - friend.birthday.year}",
+                style: TextStyle(
+                    color: Colors.black.withOpacity(0.4),
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold))
+          ]),
+        ),
+      ),
     );
   }
 }
@@ -47,7 +75,7 @@ class EventsDataSource extends CalendarDataSource {
 
   @override
   String getSubject(int index) {
-    return _getEventData(index).name;
+    return _getEventData(index).id;
   }
 
   @override
@@ -58,8 +86,7 @@ class EventsDataSource extends CalendarDataSource {
   @override
   String getRecurrenceRule(int index) {
     var birthday = _getEventData(index).birthday;
-    return
-      RecurrenceRule(
+    return RecurrenceRule(
       frequency: Frequency.yearly,
       byMonthDays: [birthday.day],
       byMonths: [birthday.month],
